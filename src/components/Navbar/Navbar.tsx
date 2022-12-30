@@ -11,10 +11,12 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import { Link } from 'react-router-dom';
+import { NavbarProps } from '../../helpers/interfaces';
 
 const pages = ['Home', 'Search'];
 
-const Navbar = () => {
+const Navbar: React.FC<NavbarProps> = ({ loggedIn }) => {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -66,11 +68,16 @@ const Navbar = () => {
                                 display: { xs: 'block', md: 'none' },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
+                            <Link to='/' style={{ textDecoration: "none", color: "black" }}>
+                                <MenuItem onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">Home</Typography>
                                 </MenuItem>
-                            ))}
+                            </Link>
+                            <Link to='/search' style={{ textDecoration: "none", color: "black" }}>
+                                <MenuItem onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">Search</Typography>
+                                </MenuItem>
+                            </Link>
                         </Menu>
                     </Box>
                     <Typography
@@ -93,11 +100,19 @@ const Navbar = () => {
                     </Typography>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                        {/* W zależności od stanu loggedIn, ustaw atrybut "to" elementu <Link>. Jeżeli loggedIn jest równe true ustaw atrybut "to" na "/user", jeżeli loggedIn jest fałszywe ustaw "to" na "/login". Użyj turnary operator inlinowo w Linku*/}
+                        <Link to={loggedIn ? '/user' : '/login'} style={{ textDecoration: "none" }}>
+                            {/* Jeżeli loggedIn jest równe true wyświetl IconButton z Avatarem, jeżeli loggedIn jest równe false, wyświetl Button (z MUI, w sx'ach: my: 2, color white, display block) textContent Log in */}
+                            {/* 1 sposób */}
+                            {loggedIn ? <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                            </IconButton>
-                        </Tooltip>
+                            </IconButton> : <Button sx={{ my: 2, color: "white", display: "block" }}>Log in</Button>}
+                            {/* 2 sposób */}
+                            {/* {loggedIn && <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                            </IconButton>}
+                            {!loggedIn && <Button sx={{ my: 2, color: "white", display: "block" }}>Log in</Button>} */}
+                        </Link>
                     </Box>
                 </Toolbar>
             </Container>
