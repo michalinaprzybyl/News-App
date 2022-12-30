@@ -1,0 +1,1 @@
+export const API_KEY = "6fd372cc3bac4e309dc2237f522a81bc"; // klucz do konta z Googla
