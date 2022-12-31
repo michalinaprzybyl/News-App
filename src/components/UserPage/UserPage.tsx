@@ -12,6 +12,7 @@ import { Typography, Button } from "@mui/material";
 import { auth } from '../../helpers/firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { UserPageProps } from '../../helpers/interfaces';
+import ProfilePhotoForm from '../ProfilePhotoForm/ProfilePhotoForm';
 
 
 const UserPage: React.FC<UserPageProps> = ({ loggedIn }) => {
@@ -21,7 +22,7 @@ const UserPage: React.FC<UserPageProps> = ({ loggedIn }) => {
                 <>
                     <Typography variant="h2" sx={{ fontSize: "2rem", my: "1rem", borderBottom: "1px solid #1976d2", pb: ".5rem" }} align="center">Your profile</Typography>
                     <Typography variant="h5" sx={{ fontSize: "1rem", my: "1rem", mx: "auto" }} align="center">Your email: {auth.currentUser.email}</Typography>
-                    {/* ProfilePhotoForm */}
+                    <ProfilePhotoForm />
                     <Button variant="outlined" onClick={() => signOut(auth)} sx={{ display: "block", mx: "auto", my: "1rem" }}>Log out</Button>
                     <Typography variant="h3" align="center" sx={{ fontSize: "1.7rem", fontWeight: 100, borderTop: "1px solid #1976d2", pt: ".3rem" }}>Liked posts</Typography>
                 </>
