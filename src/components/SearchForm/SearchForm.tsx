@@ -10,11 +10,14 @@ import { TextField, Button } from '@mui/material';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import "./SearchForm.css";
+import { SearchFormData, SearchFormProps } from '../../helpers/interfaces';
 
-const SearchForm = () => {
-    const { register, handleSubmit } = useForm();
+const SearchForm: React.FC<SearchFormProps> = ({ setKeyword }) => {
+    const { register, handleSubmit } = useForm<SearchFormData>();
 
-    const submitHandler = () => { };
+    const submitHandler = ({ keyword }: SearchFormData) => {
+        setKeyword(keyword);
+    };
 
     return (
         <form onSubmit={handleSubmit(submitHandler)} id='formStyle'>

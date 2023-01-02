@@ -7,15 +7,29 @@
 // 6. Renderowaniem warunkowym obwiń cały JSX, jeżeli loggedIn i auth.currentUser istnieją (są prawdziwe) to wyświetl elementy
 // x && y && <p>123</p>
 
-import React from 'react'
+import { useContext, useState } from 'react'
 import { Typography, Button } from "@mui/material";
-import { auth } from '../../helpers/firebaseConfig';
+import { auth, firestore } from '../../helpers/firebaseConfig';
 import { signOut } from 'firebase/auth';
 import { UserPageProps } from '../../helpers/interfaces';
 import ProfilePhotoForm from '../ProfilePhotoForm/ProfilePhotoForm';
+import { authContext } from '../../helpers/authContext';
+import { onSnapshot, collection } from 'firebase/firestore';
+import { ArticleObj } from '../../helpers/interfaces';
+import Article from '../Article/Article';
 
+const UserPage = () => {
+    const loggedIn = useContext(authContext);
+    const [likedArticles, setLikedArticles] = useState<ArticleObj[] | []>([]);
 
-const UserPage: React.FC<UserPageProps> = ({ loggedIn }) => {
+    if (loggedIn && auth.currentUser) {
+        onSnapshot(collection(firestore, auth.currentUser.uid), (querySnapshot) => {
+            const articles: ArticleObj[] = [];
+            querySnapshot.forEach((doc) => articles.push(doc.data() as ArticleObj));
+            setLikedArticles(articles);
+        });
+    }
+
     return (
         <>
             {loggedIn && auth.currentUser &&
@@ -25,6 +39,9 @@ const UserPage: React.FC<UserPageProps> = ({ loggedIn }) => {
                     <ProfilePhotoForm />
                     <Button variant="outlined" onClick={() => signOut(auth)} sx={{ display: "block", mx: "auto", my: "1rem" }}>Log out</Button>
                     <Typography variant="h3" align="center" sx={{ fontSize: "1.7rem", fontWeight: 100, borderTop: "1px solid #1976d2", pt: ".3rem" }}>Liked posts</Typography>
+                    {likedArticles.map((article: ArticleObj) => {
+                        return <Article art={article} key={article.title} />
+                    })}
                 </>
             }
         </>
